@@ -3,7 +3,7 @@
 
 \newpage
 
-## 生成函数相关
+## 组合计数相关
 
 ### 计数技巧
   - $$x ^ {\underline{n}} = nx^{\underline{n-1}}  + (x-1)^{\underline{n}}$$
@@ -39,7 +39,11 @@
         g(x) &= \sum_{i=1}^{x} (-1)^{x-i} \begin{bmatrix} x \\ i \end{bmatrix} f(i)
     \end{aligned} $$
 
-\newpage
+## 图论
+
+### 模型构建
+  - 最小割中出现负权边时，可以考虑先手动做一次增广，选择割掉一定最优的负权边，然后利用最小割在残图中调整。
+
 ## 数论相关
 
 ### 拓展$\mathrm{Euler}$定理：
@@ -70,3 +74,8 @@
 
   由$\mathrm{CRT}$，$a^{\varphi(p)} \equiv a^{2\varphi(p)} \,(\mathrm{mod}\,\,\mathrm{p})$。
 
+### 实现（卡常）技巧
+
+  - 需要多次计算的分块结构，可以用数组存下分块的位置反复使用。
+
+  - 杜教筛等算法中访问的形如$\lfloor \frac{n}{i} \rfloor$ 的函数值在下标较大的时候可以利用$n$ 除以这个数的唯一性存在商中。
