@@ -25,7 +25,6 @@ void solve(int i, int j) {
 }
 
 int main() {
-
     freopen("nodes9.out", "w", stdout);
 
     for (int i = 1; i <= 16; ++ i) {
