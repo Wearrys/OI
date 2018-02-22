@@ -72,7 +72,6 @@ double calc() {
         }
 
         ans += flag;
-
     } while (next_permutation(v1.begin(), v1.end()));
 
     return 1. * ans / tot;
