@@ -57,6 +57,20 @@ inline bool chk2(int i, int s) {
     return ret;
 }
 
+ll C(int n, int k) {
+    ll res = 1;
+    for (int i = n; i > k; -- i) res *= i;
+    for (int i = 1; i <= n-k; ++ i) res /= i;
+    return res;
+}
+
+ll fac(int n) {
+    ll res = 1;
+    for (int i = 1; i <= n; ++ i) res *= i;
+    return res;
+}
+
+
 int main() {
 
     FILE *outp1 = fopen("vote1.ans", "w");
@@ -94,31 +108,50 @@ int main() {
     }
 
     int t = 5;
-    static int poly[N + 5], res[N + 5];
+    static ll poly[N + 5], res[N + 5], ans[N + 5];
 
     poly[0] = 1;
-
     for (int i = 0; i < 7; ++i) {
         for (int j = i+1; j >= 0; --j) {
             poly[j] = poly[j] * t + (j ? -2 * poly[j-1] : 0);
         }
         t += 2;
     }
+    for (int i = 0; i <= 7; ++i) poly[i] = - poly[i];
 
-    for(int i = 0; i <= 7; ++i) {
-        int p = 1;
-        for (int j = 0; j <= 7; ++j) {
-            res[i] = res[i] + poly[j] * p;
-            p = p * i;
+    static ll dp[N + 5][N + 5];
+
+    dp[0][0] = 1;
+    for (int i = 1; i <= 7; ++ i) {
+        for (int j = 0; j <= 12; ++ j) {
+            dp[i][j] = (dp[i-1][j] * j) + (j ? dp[i-1][j-1] : 0) * (12-j+1);
         }
-        printf("%d ", res[i]);
     }
-    printf("\n");
+
+    res[0] = poly[0];
+    for (int i = 7; i >= 1; --i) {
+        for (int j = i; j <= 7; ++j) {
+            res[i] += dp[j][i] * poly[j];
+        }
+    }
+
+    for (int i = 0; i <= 12; ++i) {
+        ll tmp = 0, t2 = 0, x = 1;
+        for (int j = 0; j <= i; ++j) tmp += res[j] * C(i, j) / C(12, j);
+        for (int j = 0; j <= 7; ++j) { t2 += poly[j] * x; x *= i; }
+    }
+
+    for (int i = 0; i <= 7; ++i) {
+        ans[i] = res[i];
+        for (int j = 0; j < i; ++j) {
+            ans[i] -= ans[j] * C(7-j, i-j) * ((i-j) % 2 ? -1 : 1);
+        }
+    }
 
     for (int i = 0; i < 792; ++ i) {
         for (int j = 0; j < (1 << 7); ++ j) {
             int y = __builtin_popcount(j);
-            fprintf(outp4, "%d ", res[y] * (y&1 ? 1 : -1));
+            fprintf(outp4, "%lld ", ans[y] / C(12, 7) / C(7, y));
         }
         fprintf(outp4, "\n");
     }
