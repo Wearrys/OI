@@ -1,7 +1,7 @@
 % Bernoulli Number and Power Sum
 % Wearry
 
-## Problem Description
+## Description
 
 &emsp;&emsp;Calculate: 
 
@@ -53,4 +53,27 @@ $$
 &emsp;&emsp;&emsp;&emsp;
 &emsp;&emsp;&emsp;&emsp;
 &emsp;&emsp;&emsp;&emsp;
+&emsp;&emsp;&emsp;&emsp;
 $\Delta = 0, \mathrm{Q.E.D.}$
+
+## Generating Function
+
+$$ 
+\begin{aligned} 
+\mathrm{Define}&: \\
+    &G(x) = \sum_{i=1}^{\infty} \frac{1}{i!} x^i, F(x) = \sum_{i=0}^{\infty} \frac{B_i}{i!} x^i 
+\end{aligned}
+$$
+
+&emsp;&emsp;
+Then consider the production of function F and function G:
+
+$$ 
+\begin{aligned}
+(F * G) (x) &= \sum_{i=1}^{\infty} \left( \sum_{j=0}^{i-1} B_j {i \choose j} \right) x^i \\
+            &= \sum_{i=1}^{\infty} [i - 1 = 0] x ^ i \\
+            &= x \\
+       F(x) &= \frac{x}{e ^ x - 1}
+\end{aligned}
+$$
+
