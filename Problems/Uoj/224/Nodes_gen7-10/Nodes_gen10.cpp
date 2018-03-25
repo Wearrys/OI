@@ -52,23 +52,16 @@ node operator * (node a, node b) {
     }
     return ans;
 }
-node operator / (node a, node b) {
+node operator % (node a, node b) {
     a = a << 100;
     node ans, B = b >> 200, _b = -b;
     for(int i = 63; i >= 0; --i) {
-        if(i == 0) {
-            ans = ans + S(a + (_b << (100 + i)) + pw[90]); 
-            break;
-        }
         node cur = S(a + (_b << (100 + i)) + pw[90]);
         node sig = (-cur + "1") << 500;
         ans = ans + (cur << i);
         a = a + -((S(sig + B) + -S(sig)) << (302 + i));
     }
-    return ans;
-}
-node operator % (node a, node b) {
-    return a + -((a/b) * b);
+    return a >> 100;
 }
 
 node x, y, m;
