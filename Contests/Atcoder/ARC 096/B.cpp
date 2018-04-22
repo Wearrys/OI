@@ -33,45 +33,37 @@ template <typename T> T read(T& x) {
 
 const int N = 100000;
 
-int n, f[N + 5];
-vector<int> G[N + 5];
-
-void dfs(int u, int fa = -1) {
-
-    int c = 0;
-    for(int i = 0; i < (int) G[u].size(); ++i) {
-        int v = G[u][i];
-        if(v == fa) continue;
-
-        dfs(v, u);
-
-        if(!f[v]) {
-            ++ c;
-        } else {
-            f[u] += f[v];
-        }
-    }
-    if(c) f[u] += c - 1;
-}
+int n;
+ll c, ans;
+ll x[N + 5], v[N + 5];
+ll t0[N + 5], t1[N + 5];
+ll pre[N + 5], suf[N + 5];
 
 int main() {
 #ifdef Wearry
     freopen("in", "r", stdin);
     freopen("out", "w", stdout);
 #endif
-    
-    read(n);
-    for(int i = 1; i < n; ++i) {
-        static int u, v;
-        read(u), read(v);
-        G[u].pb(v), G[v].pb(u);
+
+    read(n), read(c);
+    for(int i = 1; i <= n; ++i) { read(x[i]), read(v[i]); }
+    for(int i = 1; i <= n; ++i) {
+        pre[i] = pre[i-1] + v[i];
+        chkmax(ans, pre[i] - x[i]);
+        t0[i] = std::max(t0[i-1], pre[i] - 2 * x[i]);
+    }
+    for(int i = n; i >= 1; --i) {
+        suf[i] = suf[i+1] + v[i];
+        chkmax(ans, suf[i] - (c - x[i]));
+        t1[i] = std::max(t1[i+1], suf[i] - 2 * (c - x[i]));
     }
 
-    for(int i = 0; i < n; ++i) if((int) G[i].size() >= 3) {
-        dfs(i);
-        printf("%d\n", f[i]);
-        return 0;
+    for(int i = 1; i <= n; ++i) {
+        chkmax(ans, pre[i] + t1[i + 1] - x[i]);
+        chkmax(ans, suf[i] + t0[i - 1] - (c - x[i]));
     }
-    printf("1\n");
+
+    printf("%lld\n", ans);
+
     return 0;
 }

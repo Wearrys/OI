@@ -31,47 +31,11 @@ template <typename T> T read(T& x) {
     return x *= f;
 }
 
-const int N = 100000;
-
-int n, f[N + 5];
-vector<int> G[N + 5];
-
-void dfs(int u, int fa = -1) {
-
-    int c = 0;
-    for(int i = 0; i < (int) G[u].size(); ++i) {
-        int v = G[u][i];
-        if(v == fa) continue;
-
-        dfs(v, u);
-
-        if(!f[v]) {
-            ++ c;
-        } else {
-            f[u] += f[v];
-        }
-    }
-    if(c) f[u] += c - 1;
-}
-
 int main() {
 #ifdef Wearry
     freopen("in", "r", stdin);
     freopen("out", "w", stdout);
 #endif
-    
-    read(n);
-    for(int i = 1; i < n; ++i) {
-        static int u, v;
-        read(u), read(v);
-        G[u].pb(v), G[v].pb(u);
-    }
 
-    for(int i = 0; i < n; ++i) if((int) G[i].size() >= 3) {
-        dfs(i);
-        printf("%d\n", f[i]);
-        return 0;
-    }
-    printf("1\n");
     return 0;
 }
