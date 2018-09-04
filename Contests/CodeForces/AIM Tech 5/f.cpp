@@ -31,43 +31,11 @@ template <typename T> T read(T& x) {
     return x *= f;
 }
 
-const int mo = 1e9 + 7;
-
-int n;
-char st[25];
-std::set <int> s;
-
 int main() {
 #ifdef Wearry
     freopen("in", "r", stdin);
     freopen("out", "w", stdout);
 #endif
-
-    int l = -oo, r = oo, a = 1, b = 1;
-
-    s.insert(l), s.insert(r);
-
-    read(n);
-    for(int i = 1; i <= n; ++i) {
-        int x;
-        scanf("%s", st); read(x);
-
-        if(st[1] == 'D') {
-            s.insert(x);
-            if(l < x && x < r) ++ a;
-        } else {
-            a = 1;
-            if(l <= x && x <= r) {
-                if(x != l && x != r) b = b * 2 % mo;
-                std::set<int> :: iterator it = s.find(x);
-                -- it; l = *it;
-                ++ it; 
-                ++ it; r = *it;
-                s.erase(x);
-            } else return puts("0"), 0;
-        }
-    }
-    printf("%lld\n", (ll) a * b % mo);
 
     return 0;
 }

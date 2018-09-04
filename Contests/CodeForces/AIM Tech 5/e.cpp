@@ -31,11 +31,10 @@ template <typename T> T read(T& x) {
     return x *= f;
 }
 
-const int mo = 1e9 + 7;
+const int N = 200000;
 
 int n;
-char st[25];
-std::set <int> s;
+ll a[N + 5], b[N + 5];
 
 int main() {
 #ifdef Wearry
@@ -43,31 +42,39 @@ int main() {
     freopen("out", "w", stdout);
 #endif
 
-    int l = -oo, r = oo, a = 1, b = 1;
-
-    s.insert(l), s.insert(r);
-
+    bool flag = true;
     read(n);
-    for(int i = 1; i <= n; ++i) {
-        int x;
-        scanf("%s", st); read(x);
+    for(int i = 1; i <= n; ++i) read(a[i]), flag &= (a[i] == 0);
 
-        if(st[1] == 'D') {
-            s.insert(x);
-            if(l < x && x < r) ++ a;
-        } else {
-            a = 1;
-            if(l <= x && x <= r) {
-                if(x != l && x != r) b = b * 2 % mo;
-                std::set<int> :: iterator it = s.find(x);
-                -- it; l = *it;
-                ++ it; 
-                ++ it; r = *it;
-                s.erase(x);
-            } else return puts("0"), 0;
+    if(flag) {
+        puts("YES");
+        for(int i = 1; i <= n; ++i) {
+            printf("%d ", 1);
+        }
+    } else {
+
+#define nxt(i) ((i == n) ? 1 : i + 1)
+#define lst(i) ((i == 1) ? n : i - 1)
+
+        int u = -1;
+        for(int i = 1; i <= n; ++i) {
+            if(a[i] < a[nxt(i)]) {
+                u = nxt(i);
+                break;
+            }
+        }
+
+        if(u == -1) puts("NO");
+        else {
+            puts("YES");
+            b[u] = a[u]; 
+            for(int i = lst(u); i != u; i = lst(i)) {
+                ll lim = a[lst(i)];
+                b[i] = ((lim - a[i]) / b[nxt(i)] + 1) * b[nxt(i)] + a[i];
+            }
+            for(int i = 1; i <= n; ++i) printf("%lld ", b[i]);
         }
     }
-    printf("%lld\n", (ll) a * b % mo);
 
     return 0;
 }
