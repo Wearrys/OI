@@ -31,11 +31,48 @@ template <typename T> T read(T& x) {
     return x *= f;
 }
 
+int n, all;
+std::map <pii, int> cnt; 
+std::map <ll, std::set<pii>> mp;
+
+pii unit(int x, int y) {
+    int r = std::__gcd(x, y);
+    return mp(x / r, y / r);
+}
+
 int main() {
 #ifdef Wearry
     freopen("in", "r", stdin);
     freopen("out", "w", stdout);
 #endif
+    
+    read(n);
+    for(int i = 1; i <= n; ++i) {
+        static int op, x, y;
+        read(op), read(x), read(y);
+
+        if(op == 1) {
+            ++ all;
+            ll dis = 1ll*x*x + 1ll*y*y;
+
+            cnt[unit(x, y)] ++;
+            for(auto v : mp[dis]) {
+                cnt[unit(x + v.fst, y + v.snd)] += 2;
+            }
+            mp[dis].insert(mp(x, y));
+        } else if(op == 2) {
+            -- all;
+            ll dis = 1ll*x*x + 1ll*y*y;
+
+            cnt[unit(x, y)] --;
+            mp[dis].erase(mp(x, y));
+            for(auto v : mp[dis]) {
+                cnt[unit(x + v.fst, y + v.snd)] -= 2;
+            }
+        } else {
+            printf("%d\n", all - cnt[unit(x, y)]);
+        }
+    }
 
     return 0;
 }
