@@ -35,6 +35,9 @@ typedef struct Point {
     Point(int x_, int y_): x(x_), y(y_) { }
 } Vector; 
 
+ll dot(const Vector& a, const Vector& b) {
+    return 1ll * a.x * b.x + 1ll * a.y * b.y;
+}
 ll cross(const Vector& a, const Vector& b) {
     return 1ll * a.x * b.y - 1ll * a.y * b.x;
 }
@@ -80,7 +83,7 @@ void get_convex(Point* p, int& cnt) {
     cnt = top - 1;
 }
 
-int get_p(ll *s, int l)  {  
+int get_p(ll* s, int l)  {  
 	int i = 0, j = 1, k = 0;
 	while(i < l && j < l) {
         k = 0;
@@ -91,8 +94,7 @@ int get_p(ll *s, int l)  {
             if(i+k+1>j) i=i+k+1; else i=j+1;
         } else if(j+k+1>i) j=j+k+1; else j=i+1; 
 	}
-	if(i<l) return i;
-	else return j;
+	if(i<l) return i; else return j;
 } 
 
 void solve() {
@@ -104,15 +106,27 @@ void solve() {
         return;
     }
 
-    static ll p0[N + 5], p1[N + 5];
-    for(int i = 0; i < n; ++i) p0[i] = cross(P0[i + 1] - P0[i == 0 ? n : i], P0[i == n-1 ? 1 : i+2] - P0[i + 1]);
-    for(int i = 0; i < n; ++i) p1[i] = cross(P1[i + 1] - P1[i == 0 ? n : i], P1[i == n-1 ? 1 : i+2] - P1[i + 1]);
+    if(n == 2) {
+        puts(dot(P0[1], P0[1]) == dot(P1[1], P1[1]) ? "YES" : "NO");
+        return;
+    }
 
-    int x = get_p(p0, n), y = get_p(p1, n);
+    static ll p0[N + 5], p1[N + 5];
+    for(int i = 0; i < n; ++i) 
+        p0[i << 1] = (cross(P0[i == 0 ? n : i], P0[i + 1])), p0[i << 1 | 1] = (dot(P0[i + 1], P0[i + 1]));
+    for(int i = 0; i < n; ++i) 
+        p1[i << 1] = (cross(P1[i == 0 ? n : i], P1[i + 1])), p1[i << 1 | 1] = (dot(P1[i + 1], P1[i + 1]));
+
+    int x = get_p(p0, n * 2), y = get_p(p1, n * 2);
 
     bool flag = true;
-    for(int i = 0; i < n; ++i) {
-        if(p0[x] != p1[y]) { flag = false; break; } else { (++ x) %= n; (++ y) %= n; }
+    for(int i = 0; i < n * 2; ++i) {
+        if(p0[x] != p1[y]) { 
+            flag = false; break; 
+        } else { 
+            (++ x) %= (n * 2); 
+            (++ y) %= (n * 2); 
+        }
     }
     puts(flag ? "YES" : "NO");
 }
