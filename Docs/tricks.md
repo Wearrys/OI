@@ -67,8 +67,8 @@
 
   $$ 
     \begin{aligned}
-        a^{\varphi(p)} \equiv a^{2\varphi(p)} \equiv 1 \,(\mathrm{mod}\,\,\mathrm{m1}) \\
-        a^{\varphi(p)} \equiv a^{2\varphi(p)} \equiv 0 \,(\mathrm{mod}\,\,\mathrm{m2}) 
+        a^{\varphi(p)} \equiv a^{2\varphi(p)} \equiv 0 \,(\mathrm{mod}\,\,\mathrm{m1}) \\
+        a^{\varphi(p)} \equiv a^{2\varphi(p)} \equiv 1 \,(\mathrm{mod}\,\,\mathrm{m2}) 
     \end{aligned}
   $$
 
