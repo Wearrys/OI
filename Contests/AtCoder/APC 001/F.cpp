@@ -49,8 +49,7 @@ int main() {
     for(int i = 1; i < n; ++i) {
         static int u, v, w;
         scanf("%d%d%d", &u, &v, &w);
-        val[u] ^= w;
-        val[v] ^= w;
+        val[u] ^= w; val[v] ^= w;
     }
 
     for(int i = 1; i <= n; ++i) {

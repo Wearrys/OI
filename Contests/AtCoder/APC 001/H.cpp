@@ -23,87 +23,72 @@ template <typename T> T read(T& x) {
     return x *= f;
 }
 
-const int N = 200000;
+const int N = 4000;
 
-int n, m;
-char st[N + 5];
-int ans[N + 5];
-vector<int> a, b, c, d;
+int n;
+vector<int> G[N + 5];
+int fa[N + 5], a[N + 5];
+int r[N + 5], b[N + 5], d[N + 5];
+
+bool chk() {
+    for(int i = 0; i < n; ++i) if(a[i] != i) return false;
+    return true;
+}
+
+vector<int> ans;
+void move(int u) {
+    ans.pb(u);
+    int t = a[0];
+    for(int i = u; i >= 0; i = fa[i]) std::swap(a[i], t);
+}
 
 int main() {
 #ifdef Wearry
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
+    freopen("in", "r", stdin);
+    freopen("out", "w", stdout);
 #endif
 
-    scanf("%d%s", &n, st + 1), st[0] = st[n << 1] = '1';
+    read(n);
 
-    for(int i = 0; i < n << 1; ++i) {
-        if(st[i] == '0' && st[i+1] == '0') {
-            a.pb(i);
-        } else if(st[i] == '0' && st[i+1] == '1') {
-            b.pb(i);
-        } else if(st[i] == '1' && st[i+1] == '0') {
-            c.pb(i);
-        } else {
-            d.pb(i);
+    fa[0] = -1;
+    for(int i = 1; i < n; ++i) read(fa[i]), G[fa[i]].pb(i), d[i] = d[fa[i]] + 1;
+    for(int i = 0; i < n; ++i) read(a[i]);
+
+    int cnt = 0;
+    while(cnt < n) {
+        vector<int> trash;
+        for(int i = n - 1; i >= 0; --i) if(!b[i]) {
+            trash.pb(i);
+            int c = -1, sz = 0;
+            for(auto v : G[i]) if(!b[v]) ++ sz, c = v;
+
+            if(!sz) r[i] = i;
+            else if(sz == 1 && r[c] != -1) r[i] = r[c];
+            else r[i] = -1;
         }
-    }
 
-    int k = d.size();
-    if(k & 1) return puts("No"), 0;
-    if(k & 2) {
-        int x = 0;
-        for(; x < (n << 1) && st[x] == '1'; ++ x);
-        if(x >= (n << 1)) return puts("No"), 0;
+        std::sort(trash.begin(), trash.end(), [&](const int& p, const int& q) {
+            return mp(r[p], d[p]) > mp(r[q], d[q]);
+        });
 
-        while(true) {
-            for(; x < (n << 1) && st[x] == '0'; ++ x);
-            if(x >= (n << 1)) return puts("No"), 0;
-
-            if(st[x + 1] == '1') {
-                break;
+        for(int i = 0; i < (int) trash.size(); ) {
+            if(r[a[0]] != -1) {
+                int x = r[a[0]];
+                for(; b[x] && a[x] > a[0]; x = fa[x]);
+                move(x);
+                ++ cnt;
+                for(; b[x]; x = fa[x]); 
+                b[x] = true;
             } else {
-                x += 2;
+                move(trash[i++]);
             }
+            for(; i < (int) trash.size() && b[trash[i]]; ++i);
         }
-
-        int y = x + 1, z = 0;
-        for(; y < (n << 1) && st[y] == '1'; ++ y);
-        if(y >= (n << 1)) return puts("No"), 0;
-
-        for(; z < k && d[z] > x-1 && d[z] < y-1; ++ z);
-        if(z >= k) return puts("No"), 0;
-
-        for(; z+1 < k && d[z+1] < x-1; ++ z);
-
-        int o = x - 1, p = y - 1;
-        ans[o] = ans[p] = ++ m; 
-        b.erase(std::lower_bound(b.begin(), b.end(), o)); 
-        c.erase(std::lower_bound(c.begin(), c.end(), p));
-
-        int q = x, r = d[z];
-        ans[q] = ans[r] = ++ m;
-        d.erase(std::lower_bound(d.begin(), d.end(), q)); 
-        d.erase(std::lower_bound(d.begin(), d.end(), r));
     }
 
-    for(int i = 0; i < (int) a.size(); i += 2) {
-        ans[a[i]] = ans[a[i+1]] = ++ m;
-    }
-    for(int i = 0; i < (int) b.size(); ++i) {
-        ans[c[i]] = ans[b[i]] = ++ m;
-    }
-    for(int i = 0; i < (int) d.size(); i += 4) {
-        ans[d[i]] = ans[d[i + 2]] = ++ m;
-        ans[d[i + 1]] = ans[d[i + 3]] = ++ m;
-    }
-
-    puts("Yes");
-    for(int i = 0; i < (n << 1); ++i) {
-        printf("%d ", ans[i]);
-    }
-    puts("");
+    assert(chk());
+    printf("%lu\n", ans.size());
+    for(auto v : ans) printf("%d\n", v);
 
     return 0;
 }
