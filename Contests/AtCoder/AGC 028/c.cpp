@@ -9,7 +9,6 @@ vector<pair<int, int> > val;
 long long ans = LLONG_MAX, sa, sb;
 
 int main() {
-
     scanf("%d", &n);
     for(int i = 1; i <= n; ++i) {
         scanf("%d%d", a+i, b+i), sa += a[i], sb += b[i];

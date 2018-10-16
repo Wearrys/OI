@@ -8,7 +8,6 @@ long long ans;
 char s[N + 5], t[N + 5];
 
 int main() {
-
     scanf("%d%d%s%s", &n, &m, s, t);
     ans = 1ll * n * m / std::__gcd(n, m);
 
