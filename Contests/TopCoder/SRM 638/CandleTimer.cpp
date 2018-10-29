@@ -21,12 +21,12 @@ class CandleTimer {
     set<int> s;
     int mn[N + 5];
     int dis[N + 5][N + 5];
+    vector<int> G[N + 5], leaf;
 
     public:
         int differentTime(vector<int> A, vector<int> B, vector<int> len) {
             s.clear();
             n = A.size() + 1;
-            vector<int> G[N + 5], leaf;
             memset(dis, oo, sizeof dis);
 
             for(int i = 0; i < n; ++i) dis[i][i] = 0;
