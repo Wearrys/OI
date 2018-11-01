@@ -5,7 +5,7 @@
 
 &emsp;&emsp;Calculate: 
 
-$$ S_k(n) = \sum_{i = 0}^{n - 1} i^k $$
+$$S_k(n) = \sum_{i = 0}^{n - 1} i^k$$
 
 ## Transform
 
@@ -76,4 +76,3 @@ $$
        F(x) &= \frac{x}{e ^ x - 1}
 \end{aligned}
 $$
-
