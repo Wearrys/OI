@@ -23,6 +23,14 @@ namespace Poly {
         while(n > (n & -n)) n += n & -n;
     }
 
+    int w[N + 5], iw[N + 5];
+    void getw() {
+        for(int i = 1; i <= N; i <<= 1) {
+            w[i] = fpm(g, (mo - 1) / i / 2);
+            iw[i] = fpm(w[i], mo - 2);
+        }
+    }
+
     void dft(int *x, int ty) {
         for(int i = 0, j = 0; i < n; ++i) {
             if(i < j) swap(x[i], x[j]);
@@ -30,8 +38,7 @@ namespace Poly {
         }
 
         for(int l = 1; l < n; l <<= 1) {
-            int wn = fpm(g, (mo - 1) / l / 2);
-            if(ty == -1) wn = fpm(wn, mo - 2);
+            int wn = (ty > 0) ? w[l] : iw[l];
 
             for(int i = 0; i < n; i += (l << 1)) {
                 int w = 1;
@@ -52,11 +59,26 @@ namespace Poly {
             }
         }
     }
+
+    void mul(int *x, int a, int *y, int b, int *z, int c, int s) {
+        static int tx[N + 5], ty[N + 5];
+
+        for(int i = 0; i < n; ++i) {
+            tx[i] = (i < a) ? x[i] : 0;
+            ty[i] = (i < b) ? y[i] : 0;
+        }
+
+        dft(tx, +1), dft(ty, +1);
+        for(int i = 0; i < n; ++i) tx[i] = 1ll * tx[i] * ty[i] % mo;
+        dft(tx, -1);
+
+        for(int i = 0; i < c; ++i) z[i] = (z[i] + tx[i + s]) % mo;
+    }
 }
 
 int n, ta, tb;
 int fac[N + 5], inv[N + 5];
-int a[N + 5], b[N + 5], f[N + 5], t[N + 5];
+int f[N + 5], t[N + 5], p[N + 5];
 
 int binom(int x, int y) {
     return 1ll * fac[x] * inv[y] % mo * inv[x-y] % mo;
@@ -70,53 +92,17 @@ void init() {
 }
 
 void solve(int l, int r) {
-    if(l == r) { 
-        t[l] = (t[l] + f[l]) % mo; 
-        return; 
-    }
+    if(l == r) { t[l] = 1ll * (t[l] + f[l]) * fpm(l, mo - 2) % mo; return; }
 
     int mid = (l + r) >> 1;
 
     solve(l, mid);
 
-    static int tx[N + 5], ty[N + 5];
-
     Poly::init(r - l + 5);
+    Poly::mul(t + l, mid - l + 1, p, r - l + 1, f + mid + 1, r - mid, mid - l);
+    Poly::mul(f + l, mid - l + 1, t, r - l + 1, t + mid + 1, r - mid, mid - l + 1);
+    Poly::mul(t + l, mid - l + 1, f, min(r - l + 1, l), t + mid + 1, r - mid, mid - l + 1);
 
-    for(int i = 0; i < Poly::n; ++i) {
-        tx[i] = (i <= (mid - l)) ? 1ll * t[l + i] * inv[l + i] % mo : 0;
-        ty[i] = 0;
-    }
-
-    for(int i = 1; i <= ta && a[i] <= r - l; ++i) { ty[a[i]] = inv[a[i]]; }
-
-    Poly::dft(tx, +1), Poly::dft(ty, +1);
-    for(int i = 0; i < Poly::n; ++i) tx[i] = 1ll * tx[i] * ty[i] % mo;
-    Poly::dft(tx, -1);
-
-    for(int i = mid-l; i < r-l; ++i) f[i + l + 1] = (f[i + l + 1] + 1ll * tx[i] * fac[i + l]) % mo;
-
-    for(int i = 0; i < Poly::n; ++i) {
-        tx[i] = (i <= (mid - l)) ? 1ll * f[l + i] * inv[l + i - 1] % mo : 0;
-        ty[i] = (i <= (r - l)) ? 1ll * t[i] * inv[i] % mo : 0;
-    }
-
-    Poly::dft(tx, +1), Poly::dft(ty, +1);
-    for(int i = 0; i < Poly::n; ++i) tx[i] = 1ll * tx[i] * ty[i] % mo;
-    Poly::dft(tx, -1);
-
-    for(int i = mid-l+1; i <= r-l; ++i) t[i + l] = (t[i + l] + 1ll * tx[i] * fac[i + l - 1]) % mo;
-
-    for(int i = 0; i < Poly::n; ++i) {
-        tx[i] = (i && i <= (r - l) && i < l) ? 1ll * f[i] * inv[i - 1] % mo : 0;
-        ty[i] = (i <= (mid - l)) ? 1ll * t[i + l] * inv[i + l] % mo : 0;
-    }
-
-    Poly::dft(tx, +1), Poly::dft(ty, +1);
-    for(int i = 0; i < Poly::n; ++i) tx[i] = 1ll * tx[i] * ty[i] % mo;
-    Poly::dft(tx, -1);
-
-    for(int i = mid-l+1; i <= r-l; ++i) t[i + l] = (t[i + l] + 1ll * tx[i] * fac[i + l - 1]) % mo;
     solve(mid+1, r);
 }
 
@@ -127,18 +113,18 @@ int main() {
 
     init();
     scanf("%d%d%d", &n, &ta, &tb);
-    for(int i = 1; i <= ta; ++i) scanf("%d", a + i);
-    for(int i = 1; i <= tb; ++i) {
-        scanf("%d", b + i);
-        if(b[i]) f[b[i] + 1] = 1;
+    for(int i = 1, a; i <= ta; ++i) scanf("%d", &a), p[a] = inv[a];
+    for(int i = 1, b; i <= tb; ++i) {
+        scanf("%d", &b);
+        if(b) f[b + 1] = inv[b];
     }
 
     if(n == 1) return !puts("1");
 
-    std::sort(a + 1, a + ta + 1);
-    
+    Poly::getw();
     solve(1, n);
-    printf("%d\n", f[n]); 
+
+    printf("%lld\n", 1ll * f[n] * fac[n-1] % mo); 
 
     return 0;
 }
