@@ -16,8 +16,8 @@ string to_str(int x, int len = 0) {
         x /= 9;
     }
 
-    string res = "0";
-    for(int i = top - 1; i >= 0; --i) {
+    string res = char(stk[top-1] + '0');
+    for(int i = top - 2; i >= 0; --i) {
         res += "9*";
         res += char(stk[i] + '0');
         res += "+";
