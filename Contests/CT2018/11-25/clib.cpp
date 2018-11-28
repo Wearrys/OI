@@ -176,10 +176,10 @@ int main() {
 	insert_ops('d', DoDrop);
 	insert_ops('!', DoEnd);
 
-    ifstream fin("4");
+    freopen("6", "r", stdin);
 
 	cout << "code:";
-	fin >> Code;
+	cin >> Code;
 	cout << "now please interactive with your program:" << endl;
 	char op_code;
 	try {
@@ -203,5 +203,7 @@ int main() {
 		cerr << x << endl;
 		return 1;
 	}
+    cerr << endl;
+    cerr << CycleCounter << endl;
 	return 0;
 }
