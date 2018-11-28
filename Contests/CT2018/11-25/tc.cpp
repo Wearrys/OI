@@ -18,8 +18,12 @@ string to_str(ll x, int len = 0) {
         x /= 9;
     }
 
+<<<<<<< HEAD
     string res = "";
     res += char(stk[top-1] + '0');
+=======
+    string res = char(stk[top-1] + '0');
+>>>>>>> refs/remotes/origin/master
     for(int i = top - 2; i >= 0; --i) {
         res += "9*";
         res += char(stk[i] + '0');
