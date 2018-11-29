@@ -11,8 +11,11 @@ long long a[N + 5];
 int c[N + 5][N + 5];
 int g[N +  5][N + 5], f[N + 5][N + 5];
 int gl[N + 5][N + 5], gr[N + 5][N + 5];
+int sl[N + 5][N + 5], sr[N + 5][N + 5];
 int fl[N + 5][N + 5][N + 5], fr[N + 5][N + 5][N + 5];
 int pl[N + 5][N + 5][N + 5], pr[N + 5][N + 5][N + 5];
+
+int p0[N + 5][N + 5], p1[N + 5][N + 5];
 
 int main() {
 #ifdef Wearry
@@ -31,24 +34,46 @@ int main() {
         }
     }
 
+    memset(p0, -1, sizeof p0);
+    memset(p1, -1, sizeof p1);
+
     for(int d = 2; d <= n; ++d) {
         for(int l = 1; l + d - 1 <= n; ++l) {
             int r = l + d - 1;
+
+            pl[l][l-1][r] = oo;
             gl[l][r] = gr[l][r] = f[l][r] = oo;
+
             for(int m = l; m < r; ++m) { chkmin(f[l][r], gl[l][m] + gr[m+1][r]); }
             for(int m = l; m < r; ++m) {
-                fl[l][m][r] = (l == m) ? f[m][r] : oo;
-                for(int p = l; p < m; ++p) 
-                    chkmin(fl[l][m][r], fl[l][p][m] + f[m][r] + max(c[m][p], c[m][r]));
+                if(l == m) fl[l][m][r] = f[m][r];
+                else {
+                    if(p0[l][m] == -1) {
+                        sl[l][m] = oo;
+                        p0[l][m] = m - 1;
+                    }
+                    while(p0[l][m] >= l && c[m][p0[l][m]] < c[m][r]) 
+                        chkmin(sl[l][m], fl[l][p0[l][m]][m]), -- p0[l][m];
+                    fl[l][m][r] = min(pl[l][p0[l][m]][m], sl[l][m] + c[m][r]) + f[m][r];
+                }
                 chkmin(gl[l][r], fl[l][m][r] + c[r][m]); 
-                pl[l][m][r] = fl[l][m][r] + c[m][r];
-                if(m > l) chkmin(pl[l][m][r], pl[l][m-1][r]);
+                chkmin(pl[l][m][r] = fl[l][m][r] + c[r][m], pl[l][m-1][r]);
             }
+
+            pr[l][r+1][r] = oo;
             for(int m = r; m > l; --m) {
-                fr[l][m][r] = (r == m) ? f[l][m] : oo;
-                for(int p = r; p > m; --p) 
-                    chkmin(fr[l][m][r], fr[m][p][r] + f[l][m] + max(c[m][p], c[m][l]));
+                if(r == m) fr[l][m][r] = f[l][m];
+                else {
+                    if(p1[m][r] == -1) {
+                        sr[m][r] = oo;
+                        p1[m][r] = m + 1;
+                    }
+                    while(p1[m][r] <= r && c[m][p1[m][r]] < c[m][l]) 
+                        chkmin(sr[m][r], fr[m][p1[m][r]][r]), ++ p1[m][r];
+                    fr[l][m][r] = min(pr[m][p1[m][r]][r], sr[m][r] + c[m][l]) + f[l][m];
+                }
                 chkmin(gr[l][r], fr[l][m][r] + c[l][m]);
+                chkmin(pr[l][m][r] = fr[l][m][r] + c[l][m], pr[l][m+1][r]);
             }
         }
     }

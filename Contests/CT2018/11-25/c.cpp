@@ -18,21 +18,14 @@ string to_str(ll x, int len = 0) {
         x /= 9;
     }
 
-<<<<<<< HEAD
-    string res = "";
-    res += char(stk[top-1] + '0');
-=======
     string res = char(stk[top-1] + '0');
->>>>>>> refs/remotes/origin/master
     for(int i = top - 2; i >= 0; --i) {
         res += "9*";
         res += char(stk[i] + '0');
         res += "+";
     }
 
-    if(flag) 
-        res = "0" + res + "-"; 
-
+    if(flag) res = "0" + res + "-"; 
     while((int) res.length() < len) res = res + '0' + '+';
 
     return res;
@@ -64,7 +57,7 @@ string Main, rep, rep1, swap;
 string g(int x, int y) { return add(add(mul(r(x), r(n)), r(y)), "5"); }
 
 int main() {
-    freopen("6", "w", stdout);
+    freopen("data8.out", "w", stdout);
 
     Main += 'r' + w(n) + 'r' + w(m);
 
