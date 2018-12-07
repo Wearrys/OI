@@ -31,14 +31,11 @@ template <typename T> T read(T& x) {
     return x *= f;
 }
 
-int l;
-int n = 20, m;
+const int N = 300000;
 
-struct edge {
-    int u, v, w;
-};
-
-edge e[1000];
+int n;
+int p[N + 5];
+int pre[N + 5], suf[N + 5];
 
 int main() {
 #ifdef Wearry
@@ -46,27 +43,19 @@ int main() {
     freopen("out", "w", stdout);
 #endif
 
-    for(int i = 19, j = 1; i > 1; --i) {
-        e[++ m] = (edge) { i, i + 1, 0 };
-        e[++ m] = (edge) { i, i + 1, j };
-        j <<= 1;
-    }
+    read(n);
+    for(int i = 1; i <= n; ++i) read(p[i]);
 
-    read(l);
-    int cur = 0;
-    if(l >> 19 & 1) {
-        cur |= (1 << 19);
-        e[++ m] = (edge) { 1, 2, 1 << 18 };
-        e[++ m] = (edge) { 1, 2, 0 };
-    }
+    pre[0] = 0, suf[n+1] = oo;
+    for(int i = 1; i <= n; ++i) pre[i] = std::max(pre[i-1], p[i]);
+    for(int i = n; i >= 1; --i) suf[i] = std::min(suf[i+1], p[i]);
 
-    for(int i = 18; i >= 0; --i) if(l >> i & 1) {
-        e[++ m] = (edge) { 1, 19-i+1, cur };
-        cur |= (1 << i);
+    for(int i = 1; i <= n; ++i) {
+        if((p[i] ^ i) & 1) return puts("No"), 0; 
+        if(i < n && (p[i] == i) == (p[i+1] == i+1) && pre[i] != i) return puts("No"), 0;
+        if(i > 1 && i < n && p[i] != i && pre[i-1] > p[i] && suf[i+1] < p[i]) return puts("No"), 0;
     }
-
-    printf("%d %d\n", n, m);
-    for(int i = 1; i <= m; ++i) printf("%d %d %d\n", e[i].u, e[i].v, e[i].w);
+    puts("Yes");
 
     return 0;
 }

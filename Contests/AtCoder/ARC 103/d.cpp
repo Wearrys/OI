@@ -31,21 +31,15 @@ template <typename T> T read(T& x) {
     return x *= f;
 }
 
-const int N = 100000;
+const int N = 1000;
 
-struct node {
-    ll d;
-    int id; 
-
-    bool operator < (const node& rhs) const {
-        return d > rhs.d;
-    }
-};
+const char* dir = "RULD";
+const int dx[] = { -1, 0, 1, 0 };
+const int dy[] = { 0, -1, 0, 1 };
 
 int n;
-node t[N + 5];
-int fa[N + 5], sz[N + 5];
-std::map <ll, int> mp;
+vector<int> step;
+ll x[N + 5], y[N + 5];
 
 int main() {
 #ifdef Wearry
@@ -55,24 +49,40 @@ int main() {
 
     read(n);
     for(int i = 1; i <= n; ++i) {
-        read(t[i].d), t[i].id = i;
+        read(x[i]), read(y[i]);
+
+        if(((x[i] + y[i]) ^ (x[1] + y[1])) & 1) {
+            return !puts("-1");
+        }
     }
 
-    std::sort(t + 1, t + n + 1);
+    if((x[1] + y[1]) % 2 == 0) step.pb(1);
+    for(int i = 0, j = 1; i <= 30; ++i, j <<= 1) step.pb(j);
 
-    for(int i = 1; i <= n; ++i) mp[t[i].d] = i;
-    for(int i = 1; i < n; ++i) {
-        ++ sz[i];
-        fa[i] = mp[t[i].d - n + 2 * sz[i]];
-        if(!fa[i]) return !puts("-1");
-        sz[fa[i]] += sz[i];
-        t[n].d -= sz[i];
-    }
+    printf("%d\n", (int) step.size());
+    for(int i = 0; i < (int) step.size(); ++i) printf("%d ", step[i]);
+    puts("");
 
-    if(t[n].d) return !puts("-1");
+    for(int i = 1; i <= n; ++i) {
+        string str;
+        for(int j = (int) step.size() - 1; j >= 0; --j) {
+            int _dir = 0;
+            ll mn = LLONG_MAX;
 
-    for(int i = 1; i < n; ++i) {
-        printf("%d %d\n", t[i].id, t[fa[i]].id);
+            for(int d = 0; d < 4; ++d) {
+                if(chkmin(mn, std::abs(x[i] + dx[d] * step[j]) + std::abs(y[i] + dy[d] * step[j]))) { 
+                    _dir = d;
+                }
+            }
+
+            //if(j == 0) assert(mn == 0);
+
+            str += dir[_dir]; 
+            x[i] += dx[_dir] * step[j];
+            y[i] += dy[_dir] * step[j];
+        }
+        std::reverse(str.begin(), str.end());
+        std::cout << str << std::endl;
     }
 
     return 0;

@@ -31,43 +31,7 @@ template <typename T> T read(T& x) {
     return x *= f;
 }
 
-const int N = 4000;
-const int mo = 998244353;
-
-int C[N + 5][N + 5];
-
-void init() {
-    for(int i = 0; i <= N; ++i) {
-        C[i][0] = C[i][i] = 1;
-        for(int j = 1; j < i; ++j) {
-            C[i][j] = (C[i-1][j] + C[i-1][j-1]) % mo;
-        }
-    }
-}
-
-int k, n;
-int solve(int x) {
-    int tot = 0;
-    for(int i = 1; i <= k; ++i) if(x >= i && (x - i) <= k) {
-        ++ tot;
-    }
-
-    int ans = 0;
-    if(x % 2 == 0) {
-        -- tot;
-        tot /= 2;
-        for(int i = 0, pw = 1; i <= tot; ++i, pw = pw * 2 % mo) {
-            ans = (ans + (ll) pw * C[tot][i] % mo * C[n+k-2*tot-2][k-2*tot+i-2]) % mo;
-            ans = (ans + (ll) pw * C[tot][i] % mo * C[n+k-2*tot-3][k-2*tot+i-2]) % mo;
-        }
-    } else {
-        tot /= 2;
-        for(int i = 0, pw = 1; i <= tot; ++i, pw = pw * 2 % mo) {
-            ans = (ans + (ll) pw * C[tot][i] % mo * C[n+k-2*tot-1][k-2*tot+i-1]) % mo;
-        }
-    }
-    return ans;
-}
+ll pw3(ll x) { return x * x * x; }
 
 int main() {
 #ifdef Wearry
@@ -75,11 +39,12 @@ int main() {
     freopen("out", "w", stdout);
 #endif
 
-    init();
-    read(k), read(n);
-    for(int i = 2; i <= 2*k; ++i) {
-        printf("%d\n", solve(i));
-    }
+    int n, k;
+    read(n), read(k);
+
+    ll ans = pw3(n / k);
+    if(k % 2 == 0 && n >= k/2) ans = ans + pw3(1 + (n - k/2) / k);
+    printf("%lld\n", ans);
 
     return 0;
 }

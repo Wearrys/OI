@@ -118,33 +118,41 @@ void solve1(vector<int>& v0, vector<int>& v1, vector<int>& v2, vector<int>& v3, 
     static int na, nb;
     static int tx[N + 5], ty[N + 5], tz[N + 5];
 
-    na = (int) v0.size();
-    nb = (int) v0.size() + n - 1;
-    for(int i = 0; i < na; ++i) tx[na - 1 - i] = v0[i];
-    for(int i = 0; i < nb; ++i) ty[i] = binom(dx + dy - 2 + i, dy - 2);
-    Poly::mul(tx, na, ty, nb, tz);
-    for(int i = 0; i < n; ++i) v2[i] = (v2[i] + tz[na - 1 + i]) % mo;
+    {
+        na = (int) v0.size();
+        nb = (int) v0.size() + n - 1;
+        for(int i = 0; i < na; ++i) tx[na - 1 - i] = v0[i];
+        for(int i = 0; i < nb; ++i) ty[i] = binom(dx + dy - 2 + i, dy - 2);
+        Poly::mul(tx, na, ty, nb, tz);
+        for(int i = 0; i < n; ++i) v2[i] = (v2[i] + tz[na - 1 + i]) % mo;
+    }
 
-    na = (int) v0.size();
-    nb = (int) v0.size() + m - 1;
-    for(int i = 0; i < na; ++i) tx[na - 1 - i] = (ll) v0[i] * inv[dx - 1 + i] % mo;
-    for(int i = 0; i < nb; ++i) ty[i] = fac[dx + dy - 2 + i];
-    Poly::mul(tx, na, ty, nb, tz);
-    for(int i = 0; i < m; ++i) v3[i] = (v3[i] + (ll) tz[na - 1 + i] * inv[dy - 1 + i]) % mo;
-    
-    na = (int) v1.size();
-    nb = (int) v1.size() + n - 1;
-    for(int i = 0; i < na; ++i) tx[na - 1 - i] = (ll) v1[i] * inv[dy - 1 + i] % mo;
-    for(int i = 0; i < nb; ++i) ty[i] = fac[dx + dy - 2 + i];
-    Poly::mul(tx, na, ty, nb, tz);
-    for(int i = 0; i < n; ++i) v2[i] = (v2[i] + (ll) tz[na - 1 + i] * inv[dx - 1 + i]) % mo;
+    {
+        na = (int) v0.size();
+        nb = (int) v0.size() + m - 1;
+        for(int i = 0; i < na; ++i) tx[na - 1 - i] = (ll) v0[i] * inv[dx - 1 + i] % mo;
+        for(int i = 0; i < nb; ++i) ty[i] = fac[dx + dy - 2 + i];
+        Poly::mul(tx, na, ty, nb, tz);
+        for(int i = 0; i < m; ++i) v3[i] = (v3[i] + (ll) tz[na - 1 + i] * inv[dy - 1 + i]) % mo;
+    }
 
-    na = (int) v1.size();
-    nb = (int) v1.size() + m - 1;
-    for(int i = 0; i < na; ++i) tx[na - 1 - i] = v1[i];
-    for(int i = 0; i < nb; ++i) ty[i] = binom(dx + dy - 2 + i, dx - 2);
-    Poly::mul(tx, na, ty, nb, tz);
-    for(int i = 0; i < m; ++i) v3[i] = (v3[i] + tz[na - 1 + i]) % mo;
+    {
+        na = (int) v1.size();
+        nb = (int) v1.size() + n - 1;
+        for(int i = 0; i < na; ++i) tx[na - 1 - i] = (ll) v1[i] * inv[dy - 1 + i] % mo;
+        for(int i = 0; i < nb; ++i) ty[i] = fac[dx + dy - 2 + i];
+        Poly::mul(tx, na, ty, nb, tz);
+        for(int i = 0; i < n; ++i) v2[i] = (v2[i] + (ll) tz[na - 1 + i] * inv[dx - 1 + i]) % mo;
+    }
+
+    {
+        na = (int) v1.size();
+        nb = (int) v1.size() + m - 1;
+        for(int i = 0; i < na; ++i) tx[na - 1 - i] = v1[i];
+        for(int i = 0; i < nb; ++i) ty[i] = binom(dx + dy - 2 + i, dx - 2);
+        Poly::mul(tx, na, ty, nb, tz);
+        for(int i = 0; i < m; ++i) v3[i] = (v3[i] + tz[na - 1 + i]) % mo;
+    }
 
     reverse(v2.begin(), v2.end());
     reverse(v3.begin(), v3.end());

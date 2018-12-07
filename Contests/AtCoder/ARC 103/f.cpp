@@ -33,8 +33,19 @@ template <typename T> T read(T& x) {
 
 const int N = 100000;
 
-int n, k;
-int a[N + 5];
+struct node {
+    ll d;
+    int id; 
+
+    bool operator < (const node& rhs) const {
+        return d > rhs.d;
+    }
+};
+
+int n;
+node t[N + 5];
+int fa[N + 5], sz[N + 5];
+std::map <ll, int> mp;
 
 int main() {
 #ifdef Wearry
@@ -42,18 +53,27 @@ int main() {
     freopen("out", "w", stdout);
 #endif
 
-    read(n), read(k);
-    for(int i = 1; i <= n; ++i) read(a[i]);
-
-    if(a[1] >= 0) return printf("%d\n", a[k]), 0;
-    if(a[n] <= 0) return printf("%d\n", -a[n-k+1]), 0;
-
-    int ans = INT_MAX;
-    for(int i = 1; i + k - 1 <= n; ++i) if(a[i] <= 0 && a[i + k - 1] >= 0) {
-        chkmin(ans, -a[i] + a[i + k - 1] - a[i]);
-        chkmin(ans, a[i + k - 1] * 2 - a[i]);
+    read(n);
+    for(int i = 1; i <= n; ++i) {
+        read(t[i].d), t[i].id = i;
     }
-    printf("%d\n", ans);
+
+    std::sort(t + 1, t + n + 1);
+
+    for(int i = 1; i <= n; ++i) mp[t[i].d] = i;
+    for(int i = 1; i < n; ++i) {
+        ++ sz[i];
+        fa[i] = mp[t[i].d - n + 2 * sz[i]];
+        if(!fa[i]) return !puts("-1");
+        sz[fa[i]] += sz[i];
+        t[n].d -= sz[i];
+    }
+
+    if(t[n].d) return !puts("-1");
+
+    for(int i = 1; i < n; ++i) {
+        printf("%d %d\n", t[i].id, t[fa[i]].id);
+    }
 
     return 0;
 }
