@@ -65,6 +65,6 @@ int main(int argc, char **argv) {
 	}
 	Detect(T, N);
 	if(Answertotal<M) WA(6);
-	printf("Accepted\n");
+	printf("Accepted: Times = %d\n", Asktotal);
 	return 0;
 }
