@@ -1,0 +1,247 @@
+\documentclass[10pt]{beamer} 
+%\usetheme{metropolis}
+\usetheme{Madrid}
+\usecolortheme{beaver}
+\usefonttheme[onlymath]{serif}
+
+\usepackage{tikz}
+\usepackage{ctex}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{dot2texi}
+\usepackage{color, xcolor}
+\usepackage{amsmath, amssymb}
+\usepackage{algorithm, algorithmic}
+\usetikzlibrary{arrows, graphs}
+
+\begin{document}
+
+\date{Sep 9, 2017}
+\title[题目选讲]{题目选讲} 
+%\institute[Yali]{}
+\author[Wearry]{Wearry}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\section{状态压缩DP}
+
+\subsection{ARC078 F Mole and Abandoned Mine}
+\begin{frame}{\insertsubsection}
+    给出一个$N$ 个点$M$ 条边的简单无向联通图。
+
+    要求删除一些边使得$1$ 号点到$N$ 号点的简单路径唯一，求删去的最小边权和。\\[0.8cm]
+
+    $1 \le N \le 15, 1 \le M \le \frac{N(N-1)}{2}$
+\end{frame}
+\begin{frame}{\insertsubsection}
+    考虑满足条件的图的一般形式，发现一定基于一条$1 \rightarrow N$ 的链。
+
+    然后为保证路径数唯一，链上两点不能通过非链上的边联通，图就会变成这样: \pause
+
+    \begin{center}
+        \includegraphics[width=5cm]{graph.png}
+    \end{center}
+
+    \pause
+    记$dp(s, t)$表示当前在图中的点集为$s$，链上的最后一个点为$t$ 的最大边权。
+
+    转移有两种情况:
+    \begin{itemize}
+        \item 枚举一个没有访问过的点，将其作为链的终点。
+        \item 枚举一个没有访问过的点集，将其接在当前的链的终点上。
+    \end{itemize}
+\end{frame}
+
+\subsection{寿司晚宴}
+\begin{frame}{\insertsubsection}
+    给出$N$ ，求有多少集合$S_1, S_2 \subseteq [2, N]$满足$S_1 \cap S_2 = \varnothing$,
+    且$\forall x \in S_1, y \in S_2$ 有 $ Gcd(x, y) = 1 $.\\[0.8cm]
+
+    $ N \le 500 $
+\end{frame}
+\begin{frame}{\insertsubsection}
+    应该是一道非常经典的题目了吧。
+
+    首先显然只需要考虑不超过$\sqrt{n}$的质因子对题目的影响。
+    然后因为剩下的质因子只会出现至多一次，可以直接根据这个值按顺序转移即可。
+
+    \vspace{3ex}
+    \pause
+    我们记$dp(S_1, S_2)$表示两个集合中出现的质因子集合分别为$S_1, S_2$的方案数。
+
+    转移的时候只需考虑包含当前这个大于$\sqrt{n}$的质因子的数放入那个集合中即可。
+\end{frame}
+
+\subsection{AGC016 F Games on DAG}
+\begin{frame}{\insertsubsection}
+    给出一个$N$ 个点，$M$ 条边的DAG，满足任意一条边的起点编号小于终点编号。\\[0.5cm]
+    
+    两个人在图上博弈，先在一号点和二号点上分别放一个棋子，每次操作可以将其中一个棋子沿图中的一条边移动。
+    两人不断进行操作，直到有人不能进行操作则游戏结束，不能操作的人输。\\[0.5cm]
+
+    考虑原图所有关于边的子图，定义一个子图为好的，当且仅当两个人在这个子图上博弈先手必胜。 \\[0.5cm]
+
+    求好的子图的个数。\\[0.8cm]
+
+    $ 1 \le N \le 15, 1 \le M \le \frac{N(N-1)}{2} $
+\end{frame}
+\begin{frame}{\insertsubsection}
+    考虑如何判断一个已知的图是否是合法的。
+
+    \vspace{3ex}
+    \pause
+    先分析只有一个棋子的情况，不难发现可以直接用$\text{SG}$ 函数处理。
+
+    如果有两个棋子，可以认为是两个子游戏的复合，要使得先手必胜，就需要两个子游戏的异或和不为零。
+
+    \vspace{3ex}
+    \pause
+    可以发现原问题即为求有多少个子图满足$1$ 号点和$2$ 号点的$\text{SG}$ 值不同。
+
+    \vspace{3ex}
+    \pause
+    为了方便后面的处理，这里所有的点分为两类，$\text{SG}$ 值等于$0$ 的点和$\text{SG}$ 值大于$0$ 的点。
+\end{frame}
+\begin{frame}{\insertsubsection}
+    考虑问题的补集，可以记$dp(S)$ 表示仅仅考虑$S$ 中的点时，满足$1$ 号点和$2$ 号点的$\text{SG}$值相同的方案数。
+
+    \vspace{3ex}
+    \pause
+    对于每个$dp(S)$,先枚举子集$\text{U}$ 作为一类点，然后将其补集$\text{S}-\text{U}$ 作为二类点，考虑合法的连边方案：
+
+    \pause
+    \begin{itemize}
+        \item $\text{U}$中的点之间不能有连边。
+        \item $\text{U}$中的点向 $\text{T}$的连边可以选择连或不连。
+        \item $\text{T}$中的点向 $\text{U}$的至少一个点连边。
+        \item $\text{T}$中的点内部连边方案为 $dp(T)$。
+        \item $1$ 号点和$2$ 号点不能分别在两个集合中。
+    \end{itemize}
+\end{frame}
+
+\subsection{排列合并机}
+\begin{frame}{\insertsubsection}
+    定义两个长度相同的排列$A, B$的得分为将这两个排列每次选择如下方式的任意一种，能够得到的本质不同的序列个数：
+
+    \begin{itemize} 
+        \item 若$A$ 非空，将$A$ 的开头放入这个序列的开头，然后删除$A$ 的开头。
+        \item 若$B$ 非空，将$B$ 的开头放入这个序列的开头，然后删除$B$ 的开头。
+    \end{itemize}
+
+    \vspace{3ex}
+    给出$N$ ，计算从所有$N!$个排列中任意选择两个排列(这两个排列可以相同)的得分期望。\\[0.8cm]
+
+    $ N \le 100 $
+\end{frame}
+\begin{frame}{\insertsubsection}
+    考虑这个问题的子问题，已知两个排列$A, B$，如何求它们的得分。\pause
+
+    \vspace{3ex}
+    一个比较直观的想法是记一个$f(i, j)$ 表示当前选到$A$ 的第$i$ 位，$B$ 的第$j$ 位能形成多少不同的前缀序列。
+    然后每次枚举从哪一个排列中选择元素填入当前的序列中。\pause
+
+    \vspace{3ex}
+    这样显然是会有重复的情况的，考虑如何去重。
+    于是我们先要想清楚每一个最终的序列会算重多少次。
+\end{frame}
+\begin{frame}{\insertsubsection}
+    定义一个序列为好的，当且仅当其由两个完全相同的排列构造而成，且没有任何一个前缀满足条件。
+    那么显然这样的好的序列会被计算两次(交换两次构造的顺序可以得到一样的结果)。\\[0.5cm]
+    
+    \pause
+    对于转移过程中的一个中间状态，我们可以枚举它的一个好的后缀序列的长度，然后删除这样的贡献即可。
+    这样的话我们要预处理长度为某个值的好的序列的长度。为了不让大家掉线，可以想一想这个子问题怎么做。\\[0.5cm]
+
+    \pause
+    因为这样的序列一定可以按顺序拆成两个排列，
+    我们可以假定第一个排列已经固定下来，然后把第二个排列一个个拼上去，可以做到$N^2$ 的复杂度，也许有更优的做法。
+\end{frame}
+\begin{frame}{\insertsubsection}
+    现在回到原问题，根据刚才的分析我们发现，
+    我们只需要考虑一个状态再往后添加一个好的后缀能够转移到哪些状态即可去重。\\[0.5cm] \pause
+
+    记$dp(i, j, k)$ 表示当前在$A$ 中选到第$i$ 个位置，$B$ 中并且这些位置的值中有$k$ 个是相同的方案数。 \\[0.5cm]
+
+    转移如下：
+    $$
+    \begin{aligned}
+        & dp(i+1, j, k+1) \leftarrow dp(i, j, k) \times (j-k) \\
+        & dp(i, j+1, k+1) \leftarrow dp(i, j, k) \times (i-k) \\
+        & dp(i+1, j, k) \leftarrow dp(i, j, k) \times (n-i-j+k) \\
+        & dp(i, j+1, k) \leftarrow dp(i, j, k) \times (n-i-j+k) \\
+        & dp(i+d, j+d, k+d) \leftarrow - dp(i, j, k) \times d! g(d) {{n-(i+j-k)} \choose {d}} 
+    \end{aligned} 
+    $$
+\end{frame}
+
+\subsection{主旋律}
+\begin{frame}{\insertsubsection}
+    给出一个$N$ 个点，$M$ 条边的有向图，求原图有多少关于边的子图是强联通的. \\[0.8cm]
+
+    $ 1 \le N \le 15, 1 \le M \le N(N-1) $
+\end{frame}
+\begin{frame}{\insertsubsection}
+    熟悉的数据范围... \\[0.8cm]\pause
+
+    这题一眼看上去不太好做, 不妨从问题的反面来考虑.
+
+    首先一个非强联通的图缩掉$Scc$ 之后会得到若干个 $DAG$. 
+
+    如果知道$Scc$ 的划分情况, 计算$DAG$ 的数量就变成一个经典问题了: \\[0.8cm]\pause
+
+    $$ E(S, T) = {|\{(u, v) \in E | u \in S, v \in T)\}|} $$
+
+    $$ F(S) = \sum _ {T \subseteq S, T \neq \varnothing} (-1) ^ {|T| - 1}  \times 2 ^ {E(T, S-T)} F(T) $$
+\end{frame}
+\begin{frame}{\insertsubsection} 
+    然而感觉枚举$Scc$ 划分更不可做.
+
+    先不考虑$Scc$ 如何划分, 考虑哪一些点集构成多少个$Scc$.
+
+    假设$G _ K(T)$表示$T$ 集合分成$K$ 个$Scc$ 的方案数, 类似上面式子地, 有:
+        
+    $$ F(S) = \sum _ {T \subseteq S, T \neq \varnothing} \sum _ {K = 1}^{|T|} (-1) ^ {K - 1} \times G _ K(T) \times 2 ^ {E(T, S-T) + E(S-T, S-T)} $$
+
+    $$ DP(S) = 2 ^ {E(S, S)} - F(S) $$
+
+    \pause
+    实际上只需要求将某个集合分成奇数个$Scc$ 与偶数个$Scc$ 的方案数之差 $ P(S) $:
+
+    $$ P(S) = DP(S) + \sum _ {T \subset S, u \in T} - DP(T) \times P(S - T) $$
+\end{frame}
+
+\section{DP优化}
+\subsection{APIO 2014 Split the sequence}
+\begin{frame}{\insertsubsection}
+    你有一个长度为$N$ 的非负整数序列。
+    
+    你需要把它分成$K+1$ 个非空的块，为了得到$K+1$ 块，你需要重复下面的操作$K$ 次：
+
+    选择一个有超过一个元素的块（初始时为一块）中的两个相邻元素把这个块从中间分开，得到两个非空的块。
+
+    每次操作后你将获得那两个新产生的块的元素和的乘积的分数。要求最大化最后的总得分。
+
+    $ N \le 100000, K \le \min(N - 1, 200) $
+\end{frame}
+\begin{frame}
+    其实这题只是用来普及一下斜率优化的，高一的同学可以先想一想 $O(N^2K)$ 的做法。\\[0.8cm]\pause
+
+    首先不难发现这样子的划分顺序是不会影响答案的，所以我们可以记录$dp(i, j)$ 表示当前分了$i$ 块，最后一次的块的划分位置在$j$ 的最优解，然后转移的时候枚举下一个划分的位置即可。
+
+    \vspace{3ex}
+    \pause
+    下面请猫来为我们现场推导这题的转移方程和斜率优化方法。
+\end{frame}
+
+\begin{frame}
+    由于dp优化大都比较套路，其实也没什么意思，所以这里只是提一下，并不想讲很多内容。
+\end{frame}
+
+\begin{frame}
+    \LARGE THANKS
+\end{frame}
+
+\end{document}

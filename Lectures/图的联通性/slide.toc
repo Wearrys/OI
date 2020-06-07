@@ -1,0 +1,12 @@
+\beamer@sectionintoc {1}{基础知识普及:}{2}{0}{1}
+\beamer@subsectionintoc {1}{1}{主要内容}{3}{0}{1}
+\beamer@subsectionintoc {1}{2}{无向图联通性的一些定义}{4}{0}{1}
+\beamer@subsectionintoc {1}{3}{无向图的Tarjan算法}{5}{0}{1}
+\beamer@subsectionintoc {1}{4}{常用最短路算法的特殊应用}{8}{0}{1}
+\beamer@sectionintoc {2}{例题选讲:}{9}{0}{2}
+\beamer@subsectionintoc {2}{1}{Knignts of the Round Table}{10}{0}{2}
+\beamer@subsectionintoc {2}{2}{思考题}{13}{0}{2}
+\beamer@subsectionintoc {2}{3}{故乡的梦}{16}{0}{2}
+\beamer@subsectionintoc {2}{4}{Network}{20}{0}{2}
+\beamer@subsectionintoc {2}{5}{Traffix Real Time Query System}{23}{0}{2}
+\beamer@subsectionintoc {2}{6}{UR 2, 跳蚤公路}{26}{0}{2}

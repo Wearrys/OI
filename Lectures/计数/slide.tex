@@ -1,0 +1,130 @@
+\documentclass[ignorenonframetext,]{beamer}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{fontspec}
+    \usepackage[UTF8]{ctex}
+    \usetheme{CambridgeUS}
+    \usecolortheme{spruce}
+    \useinnertheme{circles}
+    \usefonttheme[onlymath]{serif}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\newif\ifbibliography
+
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+
+\AtBeginPart{
+  \let\insertpartnumber\relax
+  \let\partname\relax
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \let\insertsectionnumber\relax
+  \let\sectionname\relax
+  %\frame{\sectionpage}
+  \begin{frame}
+    \tableofcontents[sectionstyle=show/shaded, hideallsubsections]
+  \end{frame}
+}
+\AtBeginSubsection{
+  \let\insertsubsectionnumber\relax
+  \let\subsectionname\relax
+  %\frame{\subsectionpage}
+}
+
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+\title{计数技巧选讲}
+\author{Wearry}
+\date{Stay determined!}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{容斥原理}\label{ux5bb9ux65a5ux539fux7406}
+
+\subsection{Calc}\label{calc}
+
+\begin{frame}
+
+\frametitle{\insertsubsection}
+
+定义序列 \(\{a_i\}\) 是合法的当且仅当：
+
+\begin{itemize}
+\tightlist
+\item
+  \(\forall i ,\, a_i \in [1, C]\)
+\item
+  \(\forall i,j ,\, a_i \neq a_j\)
+\end{itemize}
+
+定义序列的权值为所有元素的乘积， 求所有长度为 \(n\)
+的不同的合法序列的权值和， 对 \(10 \times 9 + 7\) 取模。
+
+\vspace{2ex}
+
+\(n \le 500, C \le 10^9\)
+
+https://loj.ac/problem/2731
+
+\end{frame}
+
+\section{状态转移技巧}\label{ux72b6ux6001ux8f6cux79fbux6280ux5de7}
+
+\begin{frame}
+
+http://hihocoder.com/contest/challenge37/problem/4 pt d1t3
+http://uoj.ac/problem/390
+
+\end{frame}
+
+\section{Prufer序列}\label{pruferux5e8fux5217}
+
+\begin{frame}
+
+http://hihocoder.com/contest/challenge28/problem/4
+https://loj.ac/problem/2320
+
+\end{frame}
+
+\section{多项式理论}\label{ux591aux9879ux5f0fux7406ux8bba}
+
+\begin{frame}
+
+http://hihocoder.com/contest/challenge37/problem/3
+https://loj.ac/problem/2504 pt d2t3
+
+\end{frame}
+
+\end{document}
